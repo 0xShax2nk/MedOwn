@@ -34,8 +34,8 @@ const FileUpload = (props) => {
       
         'Content-Type': 'multipart/form-data',
         'Access-Control-Allow-Origin': '*',
-        'pinata_api_key': '514ab3322c258f240160',
-        'pinata_secret_api_key':'b556f0686becfbae53d6202597989a3afb7173767eebf8340d33a883054e7d26',
+        'pinata_api_key': '',
+        'pinata_secret_api_key':'',
       }
     });
 
