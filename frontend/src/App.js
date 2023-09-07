@@ -27,52 +27,52 @@ function App() {
 
   const [contract, setContract] = useState(null);
   const [contract1, setContract1] = useState(null);
- 
+
   const [provider, setProvider] = useState(null);
   const [hashes, sethashes] = useState([]);
-  const [minted,setminted] = useState([]); 
-  
+  const [minted, setminted] = useState([]);
 
 
-  const {address} = useAccount({
+
+  const { address } = useAccount({
     onConnect: (address) => {
 
       toast.success('Wallet Connected!');
       getAllReportsUI(address.address);
       getMinted();
-      
-      console.log("Connected",address);
-      
+
+      console.log("Connected", address);
+
     },
     onDisconnect: () => {
       toast.success('Logged Out Successfully!')
     }
-  }); 
+  });
   const { ethereum } = window;
-  
- 
 
-        useEffect(() => {
+
+
+  useEffect(() => {
     const loadProvider = async () => {
-       let contractAddress = "0x9FB29601342445B4644aA41c7712879367E200b9";
-       let contract1Address = "0x82a6afD49815637348FDFfB99801383142230125";
-      
+      let contractAddress = "0x9FB29601342445B4644aA41c7712879367E200b9";
+      let contract1Address = "0x82a6afD49815637348FDFfB99801383142230125";
+
       try {
-      
+
         if (ethereum) {
           const provider = new ethers.providers.Web3Provider(ethereum);
           const signer = provider.getSigner();
           const contract = new ethers.Contract(contractAddress, addContent.abi, signer);
           const contract1 = new ethers.Contract(contract1Address, NFT.abi, signer);
-         
+
 
           setContract(contract);
           setContract1(contract1);
-          
+
           setProvider(provider);
           console.log(contract);
           console.log(contract1);
-          
+
 
         } else {
           console.log("Ethereum object doesn't exist!")
@@ -85,89 +85,89 @@ function App() {
 
     };
     loadProvider();
-        }, []);
+  }, []);
 
-        const UploadFile = async (_address,_IPFShash) => {
-
-     
-        const signer = contract.connect(provider.getSigner());
-        const receipt = await signer.addReports(_address,_IPFShash);
-        console.log(receipt);
-        const tx = await receipt.wait();
-
-        console.log("Added",tx);
-        toast.success('File Uploaded Successfully!')
-      
+  const UploadFile = async (_address, _IPFShash) => {
 
 
-    
-        };
+    const signer = contract.connect(provider.getSigner());
+    const receipt = await signer.addReports(_address, _IPFShash);
+    console.log(receipt);
+    const tx = await receipt.wait();
 
-        const mintNFT = async (inewHash) => {
-
-          
-          
-          const metadataURI = `https://gateway.pinata.cloud/ipfs/${inewHash}`;
-        
-          
-          const signer = contract1.connect(provider.getSigner());
-
-          const z = await signer.totalSupply();
-         
-
-          const tokenId = (z).toNumber() + 1;
-          console.log(tokenId)
-
-          const receipt = await signer.mint(metadataURI, tokenId,inewHash);
-          const tx = await receipt.wait();
-          toast('Minted NFT Successfully!', {
-            icon: '👏',
-          });
-          console.log(tx)
-          
-           
-        };
-
-        const getMinted  = async () => {
-          const mints = await contract1.getAllMinted();
-          setminted(mints);
-        }
-       
-        const getAllReportsUI = async (addr) =>{
-          const hash = await contract.getAllReports(addr);
-          sethashes(hash);
-          console.log(hash)
-        };
+    console.log("Added", tx);
+    toast.success('File Uploaded Successfully!')
 
 
-    
 
-   
-    return (
 
-     
-      
-    < div className = 'flex-col '>
-    <Toaster position="bottom-right"/>
+  };
 
-    {
-      address ?
-     ( <div>
-     <PatNav></PatNav>
-     <Patient hashes = {hashes} mintNFT= {mintNFT} minted={minted}></Patient>
-     <FileUpload UploadFile={UploadFile}></FileUpload>
-     <Govern></Govern>
-      </div>)
-      :
-      
-      <div>
-      <Home></Home>
-      
-      </div>
-    } 
-    
-      
-      
+  const mintNFT = async (inewHash) => {
+
+
+
+    const metadataURI = `https://gateway.pinata.cloud/ipfs/${inewHash}`;
+
+
+    const signer = contract1.connect(provider.getSigner());
+
+    const z = await signer.totalSupply();
+
+
+    const tokenId = (z).toNumber() + 1;
+    console.log(tokenId)
+
+    const receipt = await signer.mint(metadataURI, tokenId, inewHash);
+    const tx = await receipt.wait();
+    toast('NFT Minted Successfully!', {
+      icon: '👏',
+    });
+    console.log(tx)
+
+
+  };
+
+  const getMinted = async () => {
+    const mints = await contract1.getAllMinted();
+    setminted(mints);
+  }
+
+  const getAllReportsUI = async (addr) => {
+    const hash = await contract.getAllReports(addr);
+    sethashes(hash);
+    console.log(hash)
+  };
+
+
+
+
+
+  return (
+
+
+
+    < div className='flex-col '>
+      <Toaster position="bottom-right" />
+
+      {
+        address ?
+          (<div>
+            <PatNav></PatNav>
+            <Patient hashes={hashes} mintNFT={mintNFT} minted={minted}></Patient>
+            <FileUpload UploadFile={UploadFile}></FileUpload>
+            <Govern></Govern>
+          </div>)
+          :
+
+          <div>
+            <Home></Home>
+
+          </div>
+      }
+
+
+
 
       {/* <Doc></Doc>
 
@@ -175,7 +175,7 @@ function App() {
       
       <Patient hashes = {hashes} mintNFT= {mintNFT} minted={minted}></Patient>  */}
 
-      
+
 
     </div>
   );
