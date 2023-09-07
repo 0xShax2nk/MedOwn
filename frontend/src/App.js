@@ -96,7 +96,7 @@ function App() {
     const tx = await receipt.wait();
 
     console.log("Added", tx);
-    toast.success('File Uploaded Successfully!')
+    toast.success('File Uploaded Successfully!👏')
 
 
 
